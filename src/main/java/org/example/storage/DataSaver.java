@@ -4,20 +4,20 @@ import lombok.Setter;
 import org.example.model.Event;
 import org.example.model.Ticket;
 import org.example.model.User;
-import org.example.storage.dao.EventDao;
 import org.example.storage.dao.TicketDao;
 import org.example.storage.dao.UserDao;
+import org.example.storage.repository.EventRepository;
 
 @Setter
 public class DataSaver {
 
-    private EventDao eventDao;
+    private EventRepository eventRepository;
     private UserDao userDao;
     private TicketDao ticketDao;
 
     public void createTicketSaveUserAndEvent(Ticket ticket) {
         userDao.save(ticket.getUser());
-        eventDao.save(ticket.getEvent());
+        eventRepository.save(ticket.getEvent());
         ticketDao.save(ticket);
     }
 
@@ -30,6 +30,6 @@ public class DataSaver {
     }
 
     public void createEvent(Event event) {
-        eventDao.save(event);
+        eventRepository.save(event);
     }
 }
