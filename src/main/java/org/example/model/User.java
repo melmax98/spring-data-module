@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +18,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(propOrder = {"userId", "name", "email"})
 @Entity
-public class User implements Storable {
+public class User implements Storable, Serializable {
+
+    private static final long serialVersionUID = -521544420096070102L;
 
     public User(String name, String email) {
         this.name = name;

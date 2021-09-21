@@ -8,6 +8,7 @@ import org.example.model.TicketCategory;
 import org.example.model.User;
 import org.example.service.EventService;
 import org.example.service.TicketService;
+import org.example.service.UserAccountService;
 import org.example.service.UserService;
 import org.example.storage.dao.TicketDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class TicketServiceImpl implements TicketService {
     private UserService userService;
     @Setter
     private EventService eventService;
+    @Setter
+    private UserAccountService userAccountService;
 
     @Autowired
     private TicketDao ticketDao;
@@ -39,7 +42,14 @@ public class TicketServiceImpl implements TicketService {
             log.warn("Cannot book ticket because user or event does not exist");
             return null;
         }
+        Double userBalance = userAccountService.getBalanceByUser(user);
+        Double ticketPrice = event.getTicketPrice();
+        if (userBalance < ticketPrice) {
+            log.info("Not enough money. Money needed: " + ticketPrice + ", balance: " + userBalance);
+            return null;
+        }
 
+        userAccountService.withdrawMoneyFromAccount(user, ticketPrice);
         return ticketDao.bookTicket(user, event, place, category);
     }
 

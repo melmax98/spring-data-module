@@ -8,6 +8,7 @@ import org.example.model.TicketCategory;
 import org.example.model.User;
 import org.example.service.EventService;
 import org.example.service.TicketService;
+import org.example.service.UserAccountService;
 import org.example.service.UserService;
 import org.example.util.XMLConverter;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,17 @@ public class BookingFacadeImpl implements BookingFacade {
     private final UserService userService;
     private final TicketService ticketService;
     private final XMLConverter xmlConverter;
+    private final UserAccountService userAccountService;
+
+    @Override
+    public Double getBalanceByUser(User user) {
+        return userAccountService.getBalanceByUser(user);
+    }
+
+    @Override
+    public Boolean refillAccount(User user, Double amount) {
+        return userAccountService.refillAccount(user, amount);
+    }
 
     @Override
     public Event getEventById(long eventId) {

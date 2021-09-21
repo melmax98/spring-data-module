@@ -14,6 +14,19 @@ import java.util.List;
  * Groups together all operations related to tickets booking.
  */
 public interface BookingFacade {
+    /**
+     * Gets user balance.
+     *
+     * @return Double.
+     */
+    Double getBalanceByUser(User user);
+
+    /**
+     * Refill user account
+     *
+     * @return Boolean.
+     */
+    Boolean refillAccount(User user, Double amount);
 
     /**
      * Gets event by its id.

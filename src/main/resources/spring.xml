@@ -60,9 +60,14 @@
           p:noData-ref="noData"
     />
 
+    <bean id="userAccountService"
+          class="org.example.service.impl.UserAccountServiceImpl"
+    />
+
     <bean id="ticketService" class="org.example.service.impl.TicketServiceImpl"
           p:userService-ref="userService"
           p:eventService-ref="eventService"
+          p:userAccountService-ref="userAccountService"
     />
 
     <bean id="bookingFacade" class="org.example.facade.BookingFacadeImpl"
@@ -70,5 +75,6 @@
           c:userService-ref="userService"
           c:ticketService-ref="ticketService"
           c:xmlConverter-ref="xmlConverter"
+          c:userAccountService-ref="userAccountService"
     />
 </beans>
