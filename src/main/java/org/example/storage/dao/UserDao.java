@@ -2,9 +2,9 @@ package org.example.storage.dao;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.example.model.Entity;
+import org.example.model.Storable;
 import org.example.model.User;
-import org.example.storage.DataSource;
+import org.example.storage.NoData;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 public class UserDao implements Dao {
 
     @Setter
-    private DataSource dataSource;
+    private NoData noData;
 
     private static final String USER_TITLE = "user:";
 
     @Override
-    public User save(Entity entity) {
+    public User save(Storable storable) {
         long lastUserId = getStorage().values()
                 .stream()
                 .filter(User.class::isInstance)
@@ -31,7 +31,7 @@ public class UserDao implements Dao {
                 .max()
                 .orElse(0L);
 
-        User user = (User) entity;
+        User user = (User) storable;
         user.setUserId(lastUserId + 1);
         String entityKey = USER_TITLE + user.getUserId();
 
@@ -40,11 +40,11 @@ public class UserDao implements Dao {
     }
 
     @Override
-    public User update(Entity entity) {
-        User user = getUserById(((User) entity).getUserId());
+    public User update(Storable storable) {
+        User user = getUserById(((User) storable).getUserId());
 
         if (user == null) {
-            log.warn("Could not update the user with id {} because it does not exist", ((User) entity).getUserId());
+            log.warn("Could not update the user with id {} because it does not exist", ((User) storable).getUserId());
             return null;
         }
 
@@ -72,8 +72,8 @@ public class UserDao implements Dao {
     }
 
     @Override
-    public Map<String, Entity> getStorage() {
-        return dataSource.getStorage();
+    public Map<String, Storable> getStorage() {
+        return noData.getStorage();
     }
 
     public User getUserById(long userId) {
@@ -102,7 +102,7 @@ public class UserDao implements Dao {
     }
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
-        List<Entity> matchingUsers = getStorage().values()
+        List<Storable> matchingUsers = getStorage().values()
                 .stream()
                 .filter(User.class::isInstance)
                 .map(User.class::cast)
@@ -118,8 +118,8 @@ public class UserDao implements Dao {
         return getUsersPage(pageSize, pageNum, matchingUsers);
     }
 
-    private List<User> getUsersPage(int pageSize, int pageNum, List<Entity> matchingUsers) {
-        List<Entity> page = getPage(matchingUsers, pageNum, pageSize);
+    private List<User> getUsersPage(int pageSize, int pageNum, List<Storable> matchingUsers) {
+        List<Storable> page = getPage(matchingUsers, pageNum, pageSize);
 
         return page
                 .stream()

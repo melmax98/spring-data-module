@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -12,14 +15,17 @@ import javax.xml.bind.annotation.XmlType;
 @NoArgsConstructor
 @XmlRootElement
 @XmlType(propOrder = {"userId", "name", "email"})
-public class User implements Entity {
+@Entity
+public class User implements Storable {
 
     public User(String name, String email) {
         this.name = name;
         this.email = email;
     }
 
-    private long userId;
+    @Id
+    @GeneratedValue
+    private Long userId;
     private String name;
     private String email;
 

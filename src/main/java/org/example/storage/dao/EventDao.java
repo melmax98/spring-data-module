@@ -2,9 +2,9 @@ package org.example.storage.dao;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.example.model.Entity;
 import org.example.model.Event;
-import org.example.storage.DataSource;
+import org.example.model.Storable;
+import org.example.storage.NoData;
 import org.joda.time.DateTimeComparator;
 
 import java.util.Collections;
@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 public class EventDao implements Dao {
 
     @Setter
-    private DataSource dataSource;
+    private NoData noData;
 
     private static final String EVENT_TITLE = "event:";
 
     @Override
-    public Event save(Entity entity) {
+    public Event save(Storable storable) {
         long lastEventId = getStorage().values()
                 .stream()
                 .filter(Event.class::isInstance)
@@ -32,7 +32,7 @@ public class EventDao implements Dao {
                 .max()
                 .orElse(0L);
 
-        Event event = (Event) entity;
+        Event event = (Event) storable;
         event.setEventId(lastEventId + 1);
         String entityKey = EVENT_TITLE + event.getEventId();
 
@@ -41,11 +41,11 @@ public class EventDao implements Dao {
     }
 
     @Override
-    public Event update(Entity entity) {
-        Event event = getEventById(((Event) entity).getEventId());
+    public Event update(Storable storable) {
+        Event event = getEventById(((Event) storable).getEventId());
 
         if (event == null) {
-            log.warn("Could not update the event with id {} because it does not exist", ((Event) entity).getEventId());
+            log.warn("Could not update the event with id {} because it does not exist", ((Event) storable).getEventId());
             return null;
         }
 
@@ -86,7 +86,7 @@ public class EventDao implements Dao {
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
-        List<Entity> matchingEvents = getStorage().values()
+        List<Storable> matchingEvents = getStorage().values()
                 .stream()
                 .filter(Event.class::isInstance)
                 .map(Event.class::cast)
@@ -105,7 +105,7 @@ public class EventDao implements Dao {
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
         DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
 
-        List<Entity> matchingEvents = getStorage().values()
+        List<Storable> matchingEvents = getStorage().values()
                 .stream()
                 .filter(Event.class::isInstance)
                 .map(Event.class::cast)
@@ -121,8 +121,8 @@ public class EventDao implements Dao {
         return getEventsPage(pageSize, pageNum, matchingEvents);
     }
 
-    private List<Event> getEventsPage(int pageSize, int pageNum, List<Entity> matchingEvents) {
-        List<Entity> page = getPage(matchingEvents, pageNum, pageSize);
+    private List<Event> getEventsPage(int pageSize, int pageNum, List<Storable> matchingEvents) {
+        List<Storable> page = getPage(matchingEvents, pageNum, pageSize);
 
         return page
                 .stream()
@@ -131,8 +131,8 @@ public class EventDao implements Dao {
     }
 
     @Override
-    public Map<String, Entity> getStorage() {
-        return dataSource.getStorage();
+    public Map<String, Storable> getStorage() {
+        return noData.getStorage();
     }
 
     public List<Event> getAllEvents() {

@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.example.model.Entity;
 import org.example.model.Event;
+import org.example.model.Storable;
 import org.example.model.Ticket;
 import org.example.model.User;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class DataSource {
+public class NoData {
 
     @Value("${data.filepath}")
     private String dataFilePath;
@@ -28,7 +28,7 @@ public class DataSource {
     private DataSaver dataSaver;
 
     @Getter
-    private final Map<String, Entity> storage = new HashMap<>();
+    private final Map<String, Storable> storage = new HashMap<>();
 
     @PostConstruct
     private void init() {

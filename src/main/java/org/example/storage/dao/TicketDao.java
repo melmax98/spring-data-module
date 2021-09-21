@@ -2,12 +2,12 @@ package org.example.storage.dao;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.example.model.Entity;
 import org.example.model.Event;
+import org.example.model.Storable;
 import org.example.model.Ticket;
 import org.example.model.TicketCategory;
 import org.example.model.User;
-import org.example.storage.DataSource;
+import org.example.storage.NoData;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class TicketDao implements Dao {
 
     @Setter
-    private DataSource dataSource;
+    private NoData noData;
 
     private static final String TICKET_TITLE = "ticket:";
 
@@ -45,10 +45,10 @@ public class TicketDao implements Dao {
     }
 
     @Override
-    public Ticket save(Entity entity) {
+    public Ticket save(Storable storable) {
         long lastTicketId = getLastTicketId();
 
-        Ticket ticket = (Ticket) entity;
+        Ticket ticket = (Ticket) storable;
         ticket.setTicketId(lastTicketId + 1);
         String entityKey = TICKET_TITLE + ticket.getTicketId();
 
@@ -57,7 +57,7 @@ public class TicketDao implements Dao {
     }
 
     @Override
-    public Entity update(Entity entity) {
+    public Storable update(Storable storable) {
         throw new UnsupportedOperationException();
     }
 
@@ -83,7 +83,7 @@ public class TicketDao implements Dao {
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
-        List<Entity> matchingTickets = getStorage().values()
+        List<Storable> matchingTickets = getStorage().values()
                 .stream()
                 .filter(Ticket.class::isInstance)
                 .map(Ticket.class::cast)
@@ -95,7 +95,7 @@ public class TicketDao implements Dao {
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        List<Entity> matchingTickets = getStorage().values()
+        List<Storable> matchingTickets = getStorage().values()
                 .stream()
                 .filter(Ticket.class::isInstance)
                 .map(Ticket.class::cast)
@@ -120,8 +120,8 @@ public class TicketDao implements Dao {
         return (Ticket) getStorage().get(key);
     }
 
-    private List<Ticket> getTicketsPage(int pageSize, int pageNum, List<Entity> matchingTickets) {
-        List<Entity> page = getPage(matchingTickets, pageNum, pageSize);
+    private List<Ticket> getTicketsPage(int pageSize, int pageNum, List<Storable> matchingTickets) {
+        List<Storable> page = getPage(matchingTickets, pageNum, pageSize);
 
         return page
                 .stream()
@@ -130,7 +130,7 @@ public class TicketDao implements Dao {
     }
 
     @Override
-    public Map<String, Entity> getStorage() {
-        return dataSource.getStorage();
+    public Map<String, Storable> getStorage() {
+        return noData.getStorage();
     }
 }

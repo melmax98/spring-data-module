@@ -1,8 +1,8 @@
 package org.example.storage.dao;
 
-import org.example.model.Entity;
 import org.example.model.Event;
-import org.example.storage.DataSource;
+import org.example.model.Storable;
+import org.example.storage.NoData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,14 +23,14 @@ import static org.mockito.Mockito.when;
 class EventDaoTest {
 
     @Mock
-    private DataSource dataSource;
+    private NoData noData;
 
     @InjectMocks
     private EventDao eventDao;
 
     @Test
     void save() {
-        when(dataSource.getStorage()).thenReturn(new HashMap<>());
+        when(noData.getStorage()).thenReturn(new HashMap<>());
 
         Event event = new Event();
         event.setDate(new Date());
@@ -45,14 +45,14 @@ class EventDaoTest {
 
     @Test
     void update_eventExists() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         Event event = new Event();
-        event.setEventId(1);
+        event.setEventId(1L);
         event.setDate(new Date());
         event.setTitle("New");
         storage.put("event:1", event);
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         event.setTitle("title");
         Event updatedEvent = eventDao.update(event);
@@ -63,13 +63,13 @@ class EventDaoTest {
 
     @Test
     void update_eventDoesNotExist() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         Event event = new Event();
-        event.setEventId(1);
+        event.setEventId(1L);
         event.setDate(new Date());
         event.setTitle("New");
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         event.setTitle("title");
         Event updatedEvent = eventDao.update(event);
@@ -79,14 +79,14 @@ class EventDaoTest {
 
     @Test
     void delete_eventExists() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         Event event = new Event();
-        event.setEventId(1);
+        event.setEventId(1L);
         event.setDate(new Date());
         event.setTitle("New");
         storage.put("event:1", event);
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         boolean eventDeleted = eventDao.delete(1);
 
@@ -95,7 +95,7 @@ class EventDaoTest {
 
     @Test
     void delete_eventDoesNotExist() {
-        when(dataSource.getStorage()).thenReturn(new HashMap<>());
+        when(noData.getStorage()).thenReturn(new HashMap<>());
 
         boolean eventDeleted = eventDao.delete(1);
 
@@ -104,16 +104,16 @@ class EventDaoTest {
 
     @Test
     void getEventsByTitle() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         for (int i = 1; i < 10; i++) {
             Event event = new Event();
-            event.setEventId(1);
+            event.setEventId(1L);
             event.setDate(new Date());
             event.setTitle("New");
             storage.put("event:" + i, event);
         }
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         List<Event> eventsList = eventDao.getEventsByTitle("New", 5, 2);
 
@@ -122,7 +122,7 @@ class EventDaoTest {
 
     @Test
     void getEventsByTitle_noEventsWithSuchTitle() {
-        when(dataSource.getStorage()).thenReturn(new HashMap<>());
+        when(noData.getStorage()).thenReturn(new HashMap<>());
 
         List<Event> eventsList = eventDao.getEventsByTitle("New", 5, 1);
 
@@ -131,16 +131,16 @@ class EventDaoTest {
 
     @Test
     void getEventsByDate() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         for (int i = 1; i < 10; i++) {
             Event event = new Event();
-            event.setEventId(1);
+            event.setEventId(1L);
             event.setDate(new Date());
             event.setTitle("New");
             storage.put("event:" + i, event);
         }
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         List<Event> eventsList = eventDao.getEventsForDay(new Date(), 5, 2);
 
@@ -149,7 +149,7 @@ class EventDaoTest {
 
     @Test
     void getEventsByDate_noEventsWithSuchDate() {
-        when(dataSource.getStorage()).thenReturn(new HashMap<>());
+        when(noData.getStorage()).thenReturn(new HashMap<>());
 
         List<Event> eventsList = eventDao.getEventsForDay(new Date(), 5, 1);
 

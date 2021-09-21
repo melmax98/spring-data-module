@@ -4,6 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -13,13 +20,26 @@ import javax.xml.bind.annotation.XmlType;
 @NoArgsConstructor
 @XmlRootElement
 @XmlType(propOrder = {"ticketId", "event", "user", "category", "placeNumber"})
-public class Ticket implements Entity {
-    private long ticketId;
+@Entity
+public class Ticket implements Storable {
+    @Id
+    @GeneratedValue
+    private Long ticketId;
+
+    @OneToOne
+    @JoinColumn(name = "event_id")
     private Event event;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
     private TicketCategory category;
+
     private int placeNumber;
 
+    @XmlElement(name = "ticketId")
     public long getTicketId() {
         return ticketId;
     }

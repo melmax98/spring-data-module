@@ -1,8 +1,8 @@
 package org.example.storage.dao;
 
-import org.example.model.Entity;
+import org.example.model.Storable;
 import org.example.model.User;
-import org.example.storage.DataSource;
+import org.example.storage.NoData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,14 +21,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {
     @Mock
-    private DataSource dataSource;
+    private NoData noData;
 
     @InjectMocks
     private UserDao userDao;
 
     @Test
     void save() {
-        when(dataSource.getStorage()).thenReturn(new HashMap<>());
+        when(noData.getStorage()).thenReturn(new HashMap<>());
 
         User user = new User();
         user.setName("New");
@@ -43,14 +43,14 @@ class UserDaoTest {
 
     @Test
     void update_userExists() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         User user = new User();
-        user.setUserId(1);
+        user.setUserId(1L);
         user.setName("New");
         user.setEmail("new@mail.com");
         storage.put("user:1", user);
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         user.setEmail("my@mail.com");
         user.setName("Jack");
@@ -63,13 +63,13 @@ class UserDaoTest {
 
     @Test
     void update_userDoesNotExist() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         User user = new User();
-        user.setUserId(1);
+        user.setUserId(1L);
         user.setName("New");
         user.setEmail("new@mail.com");
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         user.setEmail("my@mail.com");
         user.setName("Jack");
@@ -80,14 +80,14 @@ class UserDaoTest {
 
     @Test
     void delete_userExists() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         User user = new User();
-        user.setUserId(1);
+        user.setUserId(1L);
         user.setName("New");
         user.setEmail("new@mail.com");
         storage.put("user:1", user);
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         boolean userDeleted = userDao.delete(1);
 
@@ -96,7 +96,7 @@ class UserDaoTest {
 
     @Test
     void delete_userDoesNotExist() {
-        when(dataSource.getStorage()).thenReturn(new HashMap<>());
+        when(noData.getStorage()).thenReturn(new HashMap<>());
 
         boolean userDeleted = userDao.delete(1);
 
@@ -105,16 +105,16 @@ class UserDaoTest {
 
     @Test
     void getUsersByName() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         for (int i = 1; i < 10; i++) {
             User user = new User();
-            user.setUserId(1);
+            user.setUserId(1L);
             user.setName("New");
             user.setEmail("new@mail.com");
             storage.put("user:" + i, user);
         }
 
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         List<User> userList = userDao.getUsersByName("New", 5, 2);
 
@@ -123,7 +123,7 @@ class UserDaoTest {
 
     @Test
     void getUsersByName_notFound() {
-        when(dataSource.getStorage()).thenReturn(new HashMap<>());
+        when(noData.getStorage()).thenReturn(new HashMap<>());
 
         List<User> userList = userDao.getUsersByName("New", 5, 1);
 
@@ -132,13 +132,13 @@ class UserDaoTest {
 
     @Test
     void getUserByEmail() {
-        HashMap<String, Entity> storage = new HashMap<>();
+        HashMap<String, Storable> storage = new HashMap<>();
         User user = new User();
-        user.setUserId(1);
+        user.setUserId(1L);
         user.setName("New");
         user.setEmail("new@mail.com");
         storage.put("user:1", user);
-        when(dataSource.getStorage()).thenReturn(storage);
+        when(noData.getStorage()).thenReturn(storage);
 
         User foundUser = userDao.getUserByEmail("new@mail.com");
 

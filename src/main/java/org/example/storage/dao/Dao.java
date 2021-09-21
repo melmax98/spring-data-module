@@ -1,21 +1,21 @@
 package org.example.storage.dao;
 
-import org.example.model.Entity;
+import org.example.model.Storable;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public interface Dao {
-    Entity save(org.example.model.Entity entity);
+    Storable save(Storable storable);
 
-    Entity update(org.example.model.Entity entity);
+    Storable update(Storable storable);
 
     boolean delete(long entityId);
 
-    Map<String, org.example.model.Entity> getStorage();
+    Map<String, Storable> getStorage();
 
-    default List<Entity> getPage(List<Entity> entities, int pageNum, int pageSize) {
+    default List<Storable> getPage(List<Storable> entities, int pageNum, int pageSize) {
         if (pageSize <= 0 || pageNum <= 0) {
             throw new IllegalArgumentException("invalid page size: " + pageSize);
         }

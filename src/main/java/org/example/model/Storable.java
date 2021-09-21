@@ -1,4 +1,4 @@
 package org.example.model;
 
-public interface Entity {
+public interface Storable {
 }
