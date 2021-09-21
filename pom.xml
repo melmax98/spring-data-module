@@ -5,9 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>spring-mvc-module</artifactId>
+    <artifactId>spring-data-module</artifactId>
     <packaging>war</packaging>
-    <name>spring-mvc-example</name>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -19,7 +18,7 @@
 
     <properties>
         <basedir>${project.basedir}</basedir>
-        <spring.version>5.3.9</spring.version>
+        <spring.version>5.3.10</spring.version>
         <mockito.version>3.12.4</mockito.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -78,7 +77,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6</version>
         </dependency>
 
         <dependency>
@@ -90,7 +89,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.8.0-M1</version>
+            <version>5.8.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -112,13 +111,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
