@@ -5,18 +5,18 @@ import org.example.model.Event;
 import org.example.model.Ticket;
 import org.example.model.User;
 import org.example.storage.dao.TicketDao;
-import org.example.storage.dao.UserDao;
 import org.example.storage.repository.EventRepository;
+import org.example.storage.repository.UserRepository;
 
 @Setter
 public class DataSaver {
 
     private EventRepository eventRepository;
-    private UserDao userDao;
+    private UserRepository userRepository;
     private TicketDao ticketDao;
 
     public void createTicketSaveUserAndEvent(Ticket ticket) {
-        userDao.save(ticket.getUser());
+        userRepository.save(ticket.getUser());
         eventRepository.save(ticket.getEvent());
         ticketDao.save(ticket);
     }
@@ -26,7 +26,7 @@ public class DataSaver {
     }
 
     public void createUser(User user) {
-        userDao.save(user);
+        userRepository.save(user);
     }
 
     public void createEvent(Event event) {

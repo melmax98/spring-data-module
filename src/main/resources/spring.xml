@@ -34,17 +34,13 @@
     />
 
     <bean id="dataSaver" class="org.example.storage.DataSaver"
-          p:userDao-ref="userDao"
+          p:userRepository-ref="userRepository"
           p:eventRepository-ref="eventRepository"
           p:ticketDao-ref="ticketDao"
     />
 
     <bean id="eventService"
           class="org.example.service.impl.EventServiceImpl"
-    />
-
-    <bean id="userDao" class="org.example.storage.dao.UserDao"
-          p:noData-ref="noData"
     />
 
     <bean id="userService"
