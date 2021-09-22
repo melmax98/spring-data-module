@@ -47,8 +47,8 @@ public class BookingFacadeImplTest {
         assertTrue(bookingFacade.getBookedTickets(event, 1, 1).isEmpty());
 
         assertTrue(bookingFacade.deleteEvent(event.getEventId()));
-        assertTrue(bookingFacade.deleteUser(user.getUserId()));
         assertTrue(bookingFacade.deleteUserAccount(userAccount.getUserAccountId()));
+        assertTrue(bookingFacade.deleteUser(user.getUserId()));
 
         assertNull(bookingFacade.getUserById(user.getUserId()));
         assertNull(bookingFacade.getEventById(event.getEventId()));

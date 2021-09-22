@@ -10,8 +10,10 @@ import org.example.service.EventService;
 import org.example.service.TicketService;
 import org.example.service.UserAccountService;
 import org.example.service.UserService;
-import org.example.storage.dao.TicketDao;
+import org.example.storage.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -27,11 +29,11 @@ public class TicketServiceImpl implements TicketService {
     private UserAccountService userAccountService;
 
     @Autowired
-    private TicketDao ticketDao;
+    private TicketRepository ticketRepository;
 
     @Override
     public Ticket createTicket(Ticket ticket) {
-        return ticketDao.save(ticket);
+        return ticketRepository.save(ticket);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class TicketServiceImpl implements TicketService {
         }
         boolean moneyTransferred = userAccountService.withdrawMoneyFromAccount(user, ticketPrice);
         if (moneyTransferred) {
-            return ticketDao.bookTicket(user, event, place, category);
+            return createTicket(new Ticket(event, user, category, place));
         }
         log.error("Error while booking ticket");
         throw new NullPointerException();
@@ -60,21 +62,29 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
-        return ticketDao.getBookedTickets(user, pageSize, pageNum);
+        Page<Ticket> userPage = ticketRepository.findByUser(user, PageRequest.of(pageNum - 1, pageSize));
+        return userPage.getContent();
     }
 
     @Override
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        return ticketDao.getBookedTickets(event, pageSize, pageNum);
+        Page<Ticket> userPage = ticketRepository.findByEvent(event, PageRequest.of(pageNum - 1, pageSize));
+        return userPage.getContent();
     }
 
     @Override
     public boolean cancelTicket(long ticketId) {
-        return ticketDao.delete(ticketId);
+        try {
+            ticketRepository.deleteById(ticketId);
+            return true;
+        } catch (Exception e) {
+            log.error("Was not able to delete ticket with id {}", ticketId, e);
+            return false;
+        }
     }
 
     @Override
     public Ticket getTicketById(long ticketId) {
-        return ticketDao.getTicketById(ticketId);
+        return ticketRepository.findById(ticketId).orElse(null);
     }
 }

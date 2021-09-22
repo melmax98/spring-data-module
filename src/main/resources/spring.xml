@@ -36,7 +36,7 @@
     <bean id="dataSaver" class="org.example.storage.DataSaver"
           p:userRepository-ref="userRepository"
           p:eventRepository-ref="eventRepository"
-          p:ticketDao-ref="ticketDao"
+          p:ticketRepository-ref="ticketRepository"
     />
 
     <bean id="eventService"
@@ -45,11 +45,6 @@
 
     <bean id="userService"
           class="org.example.service.impl.UserServiceImpl"
-    />
-
-    <bean id="ticketDao" depends-on="noData"
-          class="org.example.storage.dao.TicketDao"
-          p:noData-ref="noData"
     />
 
     <bean id="userAccountService"

@@ -23,6 +23,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {"ticketId", "event", "user", "category", "placeNumber"})
 @Entity
 public class Ticket implements Storable {
+
+    public Ticket(Event event, User user, TicketCategory category, int placeNumber) {
+        this.event = event;
+        this.user = user;
+        this.category = category;
+        this.placeNumber = placeNumber;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ticketId;
@@ -41,7 +49,7 @@ public class Ticket implements Storable {
     private int placeNumber;
 
     @XmlElement(name = "ticketId")
-    public long getTicketId() {
+    public Long getTicketId() {
         return ticketId;
     }
 

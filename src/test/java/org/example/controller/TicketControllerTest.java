@@ -4,6 +4,7 @@ import org.example.facade.BookingFacade;
 import org.example.model.Event;
 import org.example.model.Ticket;
 import org.example.model.User;
+import org.example.model.UserAccount;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,7 +78,9 @@ public class TicketControllerTest {
     @Test
     public void bookTicket() throws Exception {
         User user = bookingFacade.createUser(new User("test", "testmail"));
-        Event event = bookingFacade.createEvent(new Event("test", new Date(1), 0));
+        Event event = bookingFacade.createEvent(new Event("test", new Date(1), 1000));
+        UserAccount userAccount = bookingFacade.refillAccount(user, 1001.0);
+
         this.mockMvc.perform(post("/ticket")
                         .param("userId", String.valueOf(user.getUserId()))
                         .param("eventId", String.valueOf(event.getEventId()))
@@ -88,10 +91,13 @@ public class TicketControllerTest {
                 .andReturn();
 
         Ticket ticket = bookingFacade.getBookedTickets(user, 1, 1).iterator().next();
+
+        assertEquals(1, bookingFacade.getBalanceByUser(user));
+        assertTrue(bookingFacade.deleteUserAccount(userAccount.getUserAccountId()));
         assertNotNull(ticket);
         assertEquals(ticket.getUser(), user);
-        assertEquals(ticket.getEvent(), event);
         assertTrue(bookingFacade.cancelTicket(ticket.getTicketId()));
+        assertNull(bookingFacade.getTicketById(ticket.getTicketId()));
     }
 
     @Test
