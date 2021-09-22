@@ -12,6 +12,7 @@ import org.example.service.UserAccountService;
 import org.example.service.UserService;
 import org.example.storage.dao.TicketDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public Ticket bookTicket(long userId, long eventId, int place, TicketCategory category) {
         User user = userService.getUserById(userId);
         Event event = eventService.getEventById(eventId);
@@ -48,9 +50,12 @@ public class TicketServiceImpl implements TicketService {
             log.info("Not enough money. Money needed: " + ticketPrice + ", balance: " + userBalance);
             return null;
         }
-
-        userAccountService.withdrawMoneyFromAccount(user, ticketPrice);
-        return ticketDao.bookTicket(user, event, place, category);
+        boolean moneyTransferred = userAccountService.withdrawMoneyFromAccount(user, ticketPrice);
+        if (moneyTransferred) {
+            return ticketDao.bookTicket(user, event, place, category);
+        }
+        log.error("Error while booking ticket");
+        throw new NullPointerException();
     }
 
     @Override

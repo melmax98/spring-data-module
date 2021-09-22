@@ -21,9 +21,10 @@ import java.util.Date;
 @Entity
 public class Event implements Storable {
 
-    public Event(String title, Date date) {
+    public Event(String title, Date date, double ticketPrice) {
         this.title = title;
         this.date = date;
+        this.ticketPrice = ticketPrice;
     }
 
     @Id

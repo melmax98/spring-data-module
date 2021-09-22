@@ -24,7 +24,7 @@ public class UserAccount {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Double balance;
+    private double balance;
 
     public UserAccount(User user, double balance) {
         this.user = user;

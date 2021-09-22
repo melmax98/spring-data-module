@@ -6,6 +6,7 @@ import org.example.model.Event;
 import org.example.model.Ticket;
 import org.example.model.TicketCategory;
 import org.example.model.User;
+import org.example.model.UserAccount;
 import org.example.service.EventService;
 import org.example.service.TicketService;
 import org.example.service.UserAccountService;
@@ -29,12 +30,17 @@ public class BookingFacadeImpl implements BookingFacade {
     private final UserAccountService userAccountService;
 
     @Override
+    public Boolean deleteUserAccount(long userAccountId) {
+        return userAccountService.deleteUserAccount(userAccountId);
+    }
+
+    @Override
     public Double getBalanceByUser(User user) {
         return userAccountService.getBalanceByUser(user);
     }
 
     @Override
-    public Boolean refillAccount(User user, Double amount) {
+    public UserAccount refillAccount(User user, Double amount) {
         return userAccountService.refillAccount(user, amount);
     }
 

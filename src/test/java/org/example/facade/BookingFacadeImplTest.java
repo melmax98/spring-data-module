@@ -4,12 +4,11 @@ import org.example.model.Event;
 import org.example.model.Ticket;
 import org.example.model.TicketCategory;
 import org.example.model.User;
-import org.junit.Before;
+import org.example.model.UserAccount;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -26,19 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class BookingFacadeImplTest {
 
     @Autowired
-    private ApplicationContext context;
-
     private BookingFacade bookingFacade;
-
-    @Before
-    public void init() {
-        bookingFacade = (BookingFacade) context.getBean("bookingFacade");
-    }
 
     @Test
     public void bookAndCancelTicket() {
-        Event event = bookingFacade.createEvent(new Event("title", new Date()));
+        Event event = bookingFacade.createEvent(new Event("title", new Date(), 490.0));
         User user = bookingFacade.createUser(new User("josh", "josh_mail"));
+        UserAccount userAccount = bookingFacade.refillAccount(user, 495.0);
         Ticket ticket = bookingFacade.bookTicket(user.getUserId(), event.getEventId(), 1, TicketCategory.PREMIUM);
         List<Ticket> bookedTicketsByUser = bookingFacade.getBookedTickets(user, 1, 1);
         List<Ticket> bookedTicketsByEvent = bookingFacade.getBookedTickets(event, 1, 1);
@@ -47,6 +40,7 @@ public class BookingFacadeImplTest {
         assertNotNull(bookingFacade.getEventById(event.getEventId()));
         assertEquals(1, bookedTicketsByUser.size());
         assertEquals(1, bookedTicketsByEvent.size());
+        assertEquals(5, bookingFacade.getBalanceByUser(user));
 
         assertTrue(bookingFacade.cancelTicket(ticket.getTicketId()));
         assertTrue(bookingFacade.getBookedTickets(user, 1, 1).isEmpty());
@@ -54,6 +48,7 @@ public class BookingFacadeImplTest {
 
         assertTrue(bookingFacade.deleteEvent(event.getEventId()));
         assertTrue(bookingFacade.deleteUser(user.getUserId()));
+        assertTrue(bookingFacade.deleteUserAccount(userAccount.getUserAccountId()));
 
         assertNull(bookingFacade.getUserById(user.getUserId()));
         assertNull(bookingFacade.getEventById(event.getEventId()));
@@ -80,7 +75,7 @@ public class BookingFacadeImplTest {
 
     @Test
     public void updateEventTest() {
-        Event event = bookingFacade.createEvent(new Event("New", new Date()));
+        Event event = bookingFacade.createEvent(new Event("New", new Date(), 0));
         Event foundEvent = bookingFacade.getEventById(event.getEventId());
         assertEquals(event.getTitle(), foundEvent.getTitle());
         assertEquals(event.getDate(), foundEvent.getDate());
@@ -135,7 +130,7 @@ public class BookingFacadeImplTest {
         List<Event> testEvents = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            testEvents.add(bookingFacade.createEvent(new Event("testTitle", new Date(1))));
+            testEvents.add(bookingFacade.createEvent(new Event("testTitle", new Date(1), 0)));
         }
 
         List<Event> foundEventsFirstPage = bookingFacade.getEventsByTitle("testTitle", 4, 1);
@@ -157,7 +152,7 @@ public class BookingFacadeImplTest {
         List<Event> testEvents = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            testEvents.add(bookingFacade.createEvent(new Event("testTitle", new Date(1))));
+            testEvents.add(bookingFacade.createEvent(new Event("testTitle", new Date(1), 0)));
         }
 
         List<Event> foundEventsFirstPage = bookingFacade.getEventsForDay(new Date(1), 4, 1);

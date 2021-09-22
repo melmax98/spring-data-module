@@ -94,7 +94,7 @@ public class EventControllerTest {
 
     @Test
     public void updateEvent() throws Exception {
-        Event event = bookingFacade.createEvent(new Event("test", new Date(1)));
+        Event event = bookingFacade.createEvent(new Event("test", new Date(1), 0));
         this.mockMvc.perform(post("/event/update/" + event.getEventId())
                         .param("title", "America")
                         .param("date", "Sep 10, 2099"))
@@ -110,7 +110,7 @@ public class EventControllerTest {
 
     @Test
     public void deleteEvent_eventExists() throws Exception {
-        Event event = bookingFacade.createEvent(new Event("test", new Date(1)));
+        Event event = bookingFacade.createEvent(new Event("test", new Date(1), 0));
         this.mockMvc.perform(post("/event/delete/" + event.getEventId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Event was successfully deleted"))

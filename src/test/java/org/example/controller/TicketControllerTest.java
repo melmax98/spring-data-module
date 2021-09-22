@@ -77,7 +77,7 @@ public class TicketControllerTest {
     @Test
     public void bookTicket() throws Exception {
         User user = bookingFacade.createUser(new User("test", "testmail"));
-        Event event = bookingFacade.createEvent(new Event("test", new Date(1)));
+        Event event = bookingFacade.createEvent(new Event("test", new Date(1), 0));
         this.mockMvc.perform(post("/ticket")
                         .param("userId", String.valueOf(user.getUserId()))
                         .param("eventId", String.valueOf(event.getEventId()))

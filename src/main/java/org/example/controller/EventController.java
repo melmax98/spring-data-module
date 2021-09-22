@@ -70,7 +70,7 @@ public class EventController {
                               Model model) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyy");
         Date parsedDate = simpleDateFormat.parse(date, new ParsePosition(0));
-        Event event = bookingFacade.createEvent(new Event(title, parsedDate));
+        Event event = bookingFacade.createEvent(new Event(title, parsedDate, 0));
         model.addAttribute(EVENTS_ATTRIBUTE, Collections.singletonList(event));
         return EVENTS_VIEW;
     }
