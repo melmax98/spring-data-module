@@ -97,6 +97,8 @@ public class TicketControllerTest {
         assertNotNull(ticket);
         assertEquals(ticket.getUser(), user);
         assertTrue(bookingFacade.cancelTicket(ticket.getTicketId()));
+        assertTrue(bookingFacade.deleteUser(user.getUserId()));
+        assertTrue(bookingFacade.deleteEvent(event.getEventId()));
         assertNull(bookingFacade.getTicketById(ticket.getTicketId()));
     }
 
