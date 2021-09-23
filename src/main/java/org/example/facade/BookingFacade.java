@@ -6,13 +6,12 @@ import org.example.model.TicketCategory;
 import org.example.model.User;
 import org.example.model.UserAccount;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Groups together all operations related to tickets booking.
+ * Groups together all operations related to ticket booking.
  */
 public interface BookingFacade {
 
@@ -217,5 +216,5 @@ public interface BookingFacade {
     /**
      * Loads data from XML file
      */
-    void preloadTickets(InputStream inputStream) throws IOException;
+    void preloadTickets(InputStream inputStream);
 }
