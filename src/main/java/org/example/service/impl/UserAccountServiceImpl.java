@@ -32,18 +32,15 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     @Transactional
     public Boolean withdrawMoneyFromAccount(User user, Double amount) {
-        try {
-            UserAccount userAccount = userAccountRepository.findByUser(user).orElseThrow(NullPointerException::new);
-            double newBalance = userAccount.getBalance() - amount;
-            if (newBalance >= 0) {
-                userAccount.setBalance(newBalance);
-                userAccountRepository.save(userAccount);
-                return true;
-            }
-        } catch (Exception e) {
-            log.error("Was not able to withdraw money from account", e);
-            return false;
+        UserAccount userAccount = userAccountRepository.findByUser(user).orElseThrow(NullPointerException::new);
+        double newBalance = userAccount.getBalance() - amount;
+        if (newBalance >= 0) {
+            userAccount.setBalance(newBalance);
+            userAccountRepository.save(userAccount);
+            return true;
         }
+        log.warn("Was not able to withdraw money from account. Not enough money.");
+        log.warn("Needed amount: {}. Current balance: {}", amount, userAccount.getBalance());
         return false;
     }
 

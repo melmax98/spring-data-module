@@ -17,6 +17,13 @@ import java.util.List;
 public interface BookingFacade {
 
     /**
+     * Withdraws money from UserAccount
+     *
+     * @return Boolean - true is success, false if not
+     */
+    Boolean withdrawMoneyFromAccount(User user, Double amount);
+
+    /**
      * Deletes user account by id
      */
     Boolean deleteUserAccount(long userAccountId);

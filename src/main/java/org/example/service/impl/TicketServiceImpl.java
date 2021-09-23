@@ -52,12 +52,8 @@ public class TicketServiceImpl implements TicketService {
             log.info("Not enough money. Money needed: " + ticketPrice + ", balance: " + userBalance);
             return null;
         }
-        boolean moneyTransferred = userAccountService.withdrawMoneyFromAccount(user, ticketPrice);
-        if (moneyTransferred) {
-            return createTicket(new Ticket(event, user, category, place));
-        }
-        log.error("Error while booking ticket");
-        throw new NullPointerException();
+        userAccountService.withdrawMoneyFromAccount(user, ticketPrice);
+        return createTicket(new Ticket(event, user, category, place));
     }
 
     @Override

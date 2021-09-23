@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -52,6 +53,58 @@ public class BookingFacadeImplTest {
 
         assertNull(bookingFacade.getUserById(user.getUserId()));
         assertNull(bookingFacade.getEventById(event.getEventId()));
+    }
+
+    @Test
+    public void bookTicket_userDoesNotExist() {
+        Event event = bookingFacade.createEvent(new Event("title", new Date(), 490.0));
+        Ticket ticket = bookingFacade.bookTicket(Long.MAX_VALUE, event.getEventId(), 1, TicketCategory.PREMIUM);
+
+        List<Ticket> bookedTicketsByEvent = bookingFacade.getBookedTickets(event, 1, 1);
+
+        assertNotNull(bookingFacade.getEventById(event.getEventId()));
+        assertTrue(bookedTicketsByEvent.isEmpty());
+        assertNull(ticket);
+        assertTrue(bookingFacade.getBookedTickets(event, 1, 1).isEmpty());
+        assertTrue(bookingFacade.deleteEvent(event.getEventId()));
+        assertNull(bookingFacade.getEventById(event.getEventId()));
+    }
+
+    @Test
+    public void bookTicket_notEnoughMoney() {
+        Event event = bookingFacade.createEvent(new Event("title", new Date(), 500));
+        User user = bookingFacade.createUser(new User("josh", "josh_mail"));
+        UserAccount userAccount = bookingFacade.refillAccount(user, 495.0);
+        Ticket ticket = bookingFacade.bookTicket(user.getUserId(), event.getEventId(), 1, TicketCategory.PREMIUM);
+        List<Ticket> bookedTicketsByUser = bookingFacade.getBookedTickets(user, 1, 1);
+        List<Ticket> bookedTicketsByEvent = bookingFacade.getBookedTickets(event, 1, 1);
+
+        assertNotNull(bookingFacade.getEventById(event.getEventId()));
+        assertTrue(bookedTicketsByEvent.isEmpty());
+        assertTrue(bookedTicketsByUser.isEmpty());
+        assertNull(ticket);
+        assertTrue(bookingFacade.getBookedTickets(event, 1, 1).isEmpty());
+        assertTrue(bookingFacade.deleteEvent(event.getEventId()));
+        assertTrue(bookingFacade.deleteUserAccount(userAccount.getUserAccountId()));
+        assertTrue(bookingFacade.deleteUser(user.getUserId()));
+        assertNull(bookingFacade.getEventById(event.getEventId()));
+    }
+
+    @Test
+    public void withdrawMoneyFromAccount_notEnoughMoney() {
+        User user = bookingFacade.createUser(new User("josh", "josh_mail"));
+        UserAccount userAccount = bookingFacade.refillAccount(user, 495.0);
+
+        Boolean withdrawSuccess = bookingFacade.withdrawMoneyFromAccount(user, 500.0);
+
+        assertFalse(withdrawSuccess);
+        assertTrue(bookingFacade.deleteUserAccount(userAccount.getUserAccountId()));
+        assertTrue(bookingFacade.deleteUser(user.getUserId()));
+    }
+
+    @Test
+    public void deleteUserAccount_userAccountDoesNotExist() {
+        assertFalse(bookingFacade.deleteUserAccount(Long.MAX_VALUE));
     }
 
     @Test

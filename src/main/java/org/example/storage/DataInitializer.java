@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class NoData {
+public class DataInitializer {
 
     @Value("${data.filepath}")
     private String dataFilePath;

@@ -29,7 +29,7 @@
           p:dataSaver-ref="dataSaver"
     />
 
-    <bean id="noData" class="org.example.storage.NoData"
+    <bean id="dataInitializer" class="org.example.storage.DataInitializer"
           p:dataSaver-ref="dataSaver"
     />
 

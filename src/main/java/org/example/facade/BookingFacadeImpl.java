@@ -30,6 +30,11 @@ public class BookingFacadeImpl implements BookingFacade {
     private final UserAccountService userAccountService;
 
     @Override
+    public Boolean withdrawMoneyFromAccount(User user, Double amount) {
+        return userAccountService.withdrawMoneyFromAccount(user, amount);
+    }
+
+    @Override
     public Boolean deleteUserAccount(long userAccountId) {
         return userAccountService.deleteUserAccount(userAccountId);
     }
