@@ -19,7 +19,7 @@ import java.util.Date;
 @XmlRootElement
 @XmlType(propOrder = {"eventId", "title", "date", "ticketPrice"})
 @Entity
-public class Event implements Storable {
+public class Event {
 
     public Event(String title, Date date, double ticketPrice) {
         this.title = title;

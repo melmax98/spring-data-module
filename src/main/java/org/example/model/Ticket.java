@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(propOrder = {"ticketId", "event", "user", "category", "placeNumber"})
 @Entity
-public class Ticket implements Storable {
+public class Ticket {
 
     public Ticket(Event event, User user, TicketCategory category, int placeNumber) {
         this.event = event;

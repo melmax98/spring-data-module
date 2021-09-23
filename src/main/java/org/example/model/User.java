@@ -18,7 +18,7 @@ import java.io.Serializable;
 @XmlRootElement
 @XmlType(propOrder = {"userId", "name", "email"})
 @Entity
-public class User implements Storable, Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = -521544420096070102L;
 
