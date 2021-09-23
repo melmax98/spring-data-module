@@ -5,12 +5,21 @@ import org.example.model.Ticket;
 import org.example.model.TicketCategory;
 import org.example.model.User;
 import org.example.model.UserAccount;
+import org.example.service.EventService;
+import org.example.service.TicketService;
+import org.example.service.UserAccountService;
+import org.example.service.UserService;
+import org.example.storage.DataSaver;
+import org.example.util.XMLConverter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -27,6 +41,9 @@ public class BookingFacadeImplTest {
 
     @Autowired
     private BookingFacade bookingFacade;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Test
     public void bookAndCancelTicket() {
@@ -220,5 +237,37 @@ public class BookingFacadeImplTest {
         }
 
         assertTrue(bookingFacade.getEventsForDay(new Date(1), 100, 1).isEmpty());
+    }
+
+    @Test
+    public void preloadTickets() throws FileNotFoundException {
+        EventService eventService = mock(EventService.class);
+        UserService userService = mock(UserService.class);
+        TicketService ticketService = mock(TicketService.class);
+        XMLConverter xmlConverter = (XMLConverter) applicationContext.getBean("xmlConverter");
+        DataSaver dataSaver = mock(DataSaver.class);
+        xmlConverter.setDataSaver(dataSaver);
+        UserAccountService userAccountService = mock(UserAccountService.class);
+        BookingFacadeImpl bookingFacade = new BookingFacadeImpl(eventService, userService, ticketService, xmlConverter, userAccountService);
+
+        bookingFacade.preloadTickets(new FileInputStream("output/tickets.xml"));
+
+        verify(dataSaver, atLeast(1)).createTicketSaveUserAndEvent(any(Ticket.class));
+    }
+
+    @Test
+    public void preloadTickets_fail() {
+        EventService eventService = mock(EventService.class);
+        UserService userService = mock(UserService.class);
+        TicketService ticketService = mock(TicketService.class);
+        XMLConverter xmlConverter = (XMLConverter) applicationContext.getBean("xmlConverter");
+        DataSaver dataSaver = mock(DataSaver.class);
+        xmlConverter.setDataSaver(dataSaver);
+        UserAccountService userAccountService = mock(UserAccountService.class);
+        BookingFacadeImpl bookingFacade = new BookingFacadeImpl(eventService, userService, ticketService, xmlConverter, userAccountService);
+
+        bookingFacade.preloadTickets(mock(FileInputStream.class));
+
+        verify(dataSaver, never()).createTicketSaveUserAndEvent(any(Ticket.class));
     }
 }

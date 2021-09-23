@@ -14,7 +14,6 @@ import org.example.service.UserService;
 import org.example.util.XMLConverter;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
@@ -154,7 +153,7 @@ public class BookingFacadeImpl implements BookingFacade {
     public void preloadTickets(InputStream inputStream) {
         try {
             xmlConverter.xmlToObj(inputStream);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error while preloading tickets from xml file", e);
         }
     }
