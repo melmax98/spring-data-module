@@ -36,6 +36,6 @@ public class Event {
 
     @Override
     public String toString() {
-        return eventId + " " + title + " " + DateUtils.simpleDateFormat.format(date);
+        return eventId + " " + title + " " + DateUtils.getInstance().getSimpleDateFormat().format(date);
     }
 }
